@@ -1,6 +1,7 @@
 package com.br.alura.Challenge_ForumHub.controller;
 
 
+import com.br.alura.Challenge_ForumHub.dto.DadosAtualizacaoTopico;
 import com.br.alura.Challenge_ForumHub.dto.DadosCadastroTopico;
 import com.br.alura.Challenge_ForumHub.dto.DadosDetalhamentoTopico;
 import com.br.alura.Challenge_ForumHub.dto.DadosListagemTopico;
@@ -47,9 +48,17 @@ public class TopicoController {
     }
 
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity deletar(@PathVariable Long id){
         service.deletar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity atualizar(@PathVariable Long id, @RequestBody @Valid DadosAtualizacaoTopico dados) {
+        var topicoAtualizado = service.atualizar(id, dados);
+        return ResponseEntity.ok(new DadosDetalhamentoTopico(topicoAtualizado));
     }
 
 

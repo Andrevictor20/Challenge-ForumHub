@@ -1,5 +1,6 @@
 package com.br.alura.Challenge_ForumHub.model;
 
+import com.br.alura.Challenge_ForumHub.dto.DadosAtualizacaoTopico;
 import com.br.alura.Challenge_ForumHub.dto.DadosCadastroTopico;
 import jakarta.persistence.*; // Importações importantes!
 import lombok.AllArgsConstructor;
@@ -36,5 +37,13 @@ public class Topico {
 
     public void excluir() {
         this.estadoDoTopico = false;
+    }
+    public void atualizarInformacoes(DadosAtualizacaoTopico dados) {
+        if (dados.titulo() != null) {
+            this.titulo = dados.titulo();
+        }
+        if (dados.mensagem() != null) {
+            this.mensagem = dados.mensagem();
+        }
     }
 }

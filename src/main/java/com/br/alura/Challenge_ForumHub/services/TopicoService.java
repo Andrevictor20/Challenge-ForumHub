@@ -1,5 +1,6 @@
 package com.br.alura.Challenge_ForumHub.services;
 
+import com.br.alura.Challenge_ForumHub.dto.DadosAtualizacaoTopico;
 import com.br.alura.Challenge_ForumHub.dto.DadosCadastroTopico;
 import com.br.alura.Challenge_ForumHub.dto.DadosListagemTopico;
 import com.br.alura.Challenge_ForumHub.infra.exception.ValidacaoException;
@@ -43,5 +44,12 @@ public class TopicoService {
                 .orElseThrow(() -> new EntityNotFoundException("Tópico não encontrado!"));
 
         topico.excluir();
+    }
+
+    @Transactional
+    public Topico atualizar(Long id, DadosAtualizacaoTopico dados) {
+        var topico = detalhar(id);
+        topico.atualizarInformacoes(dados);
+        return topico;
     }
 }
