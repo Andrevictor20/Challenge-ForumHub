@@ -8,8 +8,6 @@ public record DadosCadastroTopico(
         String titulo,
         @NotBlank
         String mensagem,
-        @NotNull
-        Long idAutor,
         @NotBlank
         String curso) {
 }

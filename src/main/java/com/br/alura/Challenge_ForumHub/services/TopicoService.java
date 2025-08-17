@@ -5,6 +5,7 @@ import com.br.alura.Challenge_ForumHub.dto.DadosCadastroTopico;
 import com.br.alura.Challenge_ForumHub.dto.DadosListagemTopico;
 import com.br.alura.Challenge_ForumHub.infra.exception.ValidacaoException;
 import com.br.alura.Challenge_ForumHub.model.Topico;
+import com.br.alura.Challenge_ForumHub.model.Usuario;
 import com.br.alura.Challenge_ForumHub.repository.TopicoRepository;
 import com.br.alura.Challenge_ForumHub.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -22,12 +23,11 @@ public class TopicoService {
     private final UsuarioRepository usuarioRepository;
 
     @Transactional
-    public Topico cadastrar(DadosCadastroTopico dados) {
-         if (topicoRepository.existsByTituloAndMensagem(dados.titulo(), dados.mensagem())) {
-             throw new ValidacaoException("Já existe um tópico com mesmo título e mensagem!");
-         }
-        var autor = usuarioRepository.findById(dados.idAutor())
-                .orElseThrow(() -> new ValidacaoException("Autor não encontrado!"));
+    public Topico cadastrar(DadosCadastroTopico dados, Usuario autor) {
+        if (topicoRepository.existsByTituloAndMensagem(dados.titulo(), dados.mensagem())) {
+            throw new ValidacaoException("Já existe um tópico com mesmo título e mensagem!");
+        }
+
         var topico = new Topico(dados, autor);
         topicoRepository.save(topico);
         return topico;

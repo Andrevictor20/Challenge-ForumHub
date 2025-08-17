@@ -1,5 +1,7 @@
 package com.br.alura.Challenge_ForumHub.model;
 
+import com.br.alura.Challenge_ForumHub.dto.DadosAtualizacaoUsuario;
+import com.br.alura.Challenge_ForumHub.dto.DadosCadastroUsuario;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,12 +19,35 @@ import java.util.List;
 @EqualsAndHashCode(of = "id")
 public class Usuario implements UserDetails {
 
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
     private String login;
     private String senha;
+    private Boolean ativo;
+
+    public Usuario(DadosCadastroUsuario dados, String senhaCriptografada) {
+        this.nome = dados.nome();
+        this.login = dados.login();
+        this.senha = senhaCriptografada;
+        this.ativo = true;
+    }
+
+    public void atualizarInformacoes(DadosAtualizacaoUsuario dados, String novaSenhaCriptografada) {
+        if (dados.nome() != null) {
+            this.nome = dados.nome();
+        }
+        if (novaSenhaCriptografada != null) {
+            this.senha = novaSenhaCriptografada;
+        }
+    }
+
+    public void excluir() {
+        this.ativo = false;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
