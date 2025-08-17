@@ -40,5 +40,11 @@ public class TopicoController {
         return ResponseEntity.ok(page);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity detalhar(@PathVariable Long id){
+        var topico = service.detalhar(id);
+        return ResponseEntity.ok(new DadosDetalhamentoTopico(topico));
+    }
+
 
 }

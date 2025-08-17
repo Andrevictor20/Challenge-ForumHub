@@ -5,6 +5,7 @@ import com.br.alura.Challenge_ForumHub.dto.DadosListagemTopico;
 import com.br.alura.Challenge_ForumHub.infra.exception.ValidacaoException;
 import com.br.alura.Challenge_ForumHub.model.Topico;
 import com.br.alura.Challenge_ForumHub.repository.TopicoRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,5 +30,10 @@ public class TopicoService {
 
     public Page<DadosListagemTopico> listar(Pageable paginacao) {
         return repository.findAllByEstadoDoTopicoTrue(paginacao).map(DadosListagemTopico::new);
+    }
+
+    public Topico detalhar(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Tópico não encontrado!"));
     }
 }

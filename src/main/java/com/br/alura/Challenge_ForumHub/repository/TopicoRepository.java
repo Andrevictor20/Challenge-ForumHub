@@ -10,5 +10,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface TopicoRepository extends JpaRepository<Topico,Long> {
     Page<Topico> findAllByEstadoDoTopicoTrue(Pageable paginacao);
 
-    boolean existsByTituloAndMensagem(@NotBlank String titulo, @NotBlank String mensagem);
+    Boolean existsByTituloAndMensagem(@NotBlank String titulo, @NotBlank String mensagem);
 }
