@@ -1,13 +1,12 @@
 package com.br.alura.Challenge_ForumHub.controller;
 
 
-import com.br.alura.Challenge_ForumHub.dto.DadosAtualizacaoTopico;
-import com.br.alura.Challenge_ForumHub.dto.DadosCadastroTopico;
-import com.br.alura.Challenge_ForumHub.dto.DadosDetalhamentoTopico;
-import com.br.alura.Challenge_ForumHub.dto.DadosListagemTopico;
+import com.br.alura.Challenge_ForumHub.dto.*;
 import com.br.alura.Challenge_ForumHub.model.Topico;
 import com.br.alura.Challenge_ForumHub.model.Usuario;
+import com.br.alura.Challenge_ForumHub.repository.RespostaRepository;
 import com.br.alura.Challenge_ForumHub.repository.TopicoRepository;
+import com.br.alura.Challenge_ForumHub.services.RespostaService;
 import com.br.alura.Challenge_ForumHub.services.TopicoService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -28,6 +27,7 @@ public class TopicoController {
 
     @Autowired
     private final TopicoService service;
+    private final RespostaService respostaService;
 
     @PostMapping
     @Transactional
@@ -61,6 +61,12 @@ public class TopicoController {
     public ResponseEntity atualizar(@PathVariable Long id, @RequestBody @Valid DadosAtualizacaoTopico dados) {
         var topicoAtualizado = service.atualizar(id, dados);
         return ResponseEntity.ok(new DadosDetalhamentoTopico(topicoAtualizado));
+    }
+
+    @GetMapping("/{id}/respostas")
+    public ResponseEntity<Page<DadosDetalhamentoResposta>> listarRespostas(@PathVariable Long id, @PageableDefault(size = 10, sort = {"dataCriacao"}) Pageable paginacao) {
+        var page = respostaService.listarPorTopico(id, paginacao);
+        return ResponseEntity.ok(page);
     }
 
 
