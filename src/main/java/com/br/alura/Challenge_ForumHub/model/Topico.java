@@ -33,4 +33,8 @@ public class Topico {
         this.dataDeCriacao = LocalDateTime.now();
         this.estadoDoTopico = true;
     }
+
+    public void excluir() {
+        this.estadoDoTopico = false;
+    }
 }
