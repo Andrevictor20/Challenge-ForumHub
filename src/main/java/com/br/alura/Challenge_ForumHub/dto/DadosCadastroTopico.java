@@ -1,15 +1,15 @@
 package com.br.alura.Challenge_ForumHub.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record DadosCadastroTopico(
         @NotBlank
         String titulo,
         @NotBlank
         String mensagem,
+        @NotNull
+        Long idAutor,
         @NotBlank
-        String autor,
-        @NotBlank
-        String curso
-) {
+        String curso) {
 }

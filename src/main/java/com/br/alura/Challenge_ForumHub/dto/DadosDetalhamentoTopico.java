@@ -9,7 +9,7 @@ public record DadosDetalhamentoTopico(
         String titulo,
         String mensagem,
         LocalDateTime dataDeCriacao,
-        String autor,
+        String nomeAutor,
         String curso) {
 
     public DadosDetalhamentoTopico(Topico topico) {
@@ -18,7 +18,7 @@ public record DadosDetalhamentoTopico(
                 topico.getTitulo(),
                 topico.getMensagem(),
                 topico.getDataDeCriacao(),
-                topico.getAutor(),
+                topico.getAutor().getNome(),
                 topico.getCurso()
         );
     }

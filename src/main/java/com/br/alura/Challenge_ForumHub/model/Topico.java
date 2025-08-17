@@ -23,13 +23,15 @@ public class Topico {
     private String mensagem;
     private LocalDateTime dataDeCriacao;
     private Boolean estadoDoTopico;
-    private String autor;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "autor_id")
+    private Usuario autor;
     private String curso;
 
-    public Topico(DadosCadastroTopico dados) {
+    public Topico(DadosCadastroTopico dados,Usuario autor) {
         this.titulo = dados.titulo();
         this.mensagem = dados.mensagem();
-        this.autor = dados.autor();
+        this.autor = autor;
         this.curso = dados.curso();
         this.dataDeCriacao = LocalDateTime.now();
         this.estadoDoTopico = true;

@@ -6,6 +6,7 @@ import com.br.alura.Challenge_ForumHub.dto.DadosListagemTopico;
 import com.br.alura.Challenge_ForumHub.infra.exception.ValidacaoException;
 import com.br.alura.Challenge_ForumHub.model.Topico;
 import com.br.alura.Challenge_ForumHub.repository.TopicoRepository;
+import com.br.alura.Challenge_ForumHub.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,30 +18,33 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class TopicoService {
 
-    private final TopicoRepository repository;
+    private final TopicoRepository topicoRepository;
+    private final UsuarioRepository usuarioRepository;
 
     @Transactional
     public Topico cadastrar(DadosCadastroTopico dados) {
-         if (repository.existsByTituloAndMensagem(dados.titulo(), dados.mensagem())) {
+         if (topicoRepository.existsByTituloAndMensagem(dados.titulo(), dados.mensagem())) {
              throw new ValidacaoException("Já existe um tópico com mesmo título e mensagem!");
          }
-        var topico = new Topico(dados);
-        repository.save(topico);
+        var autor = usuarioRepository.findById(dados.idAutor())
+                .orElseThrow(() -> new ValidacaoException("Autor não encontrado!"));
+        var topico = new Topico(dados, autor);
+        topicoRepository.save(topico);
         return topico;
     }
 
     public Page<DadosListagemTopico> listar(Pageable paginacao) {
-        return repository.findAllByEstadoDoTopicoTrue(paginacao).map(DadosListagemTopico::new);
+        return topicoRepository.findAllByEstadoDoTopicoTrue(paginacao).map(DadosListagemTopico::new);
     }
 
     public Topico detalhar(Long id) {
-        return repository.findByIdAndEstadoDoTopicoTrue(id)
+        return topicoRepository.findByIdAndEstadoDoTopicoTrue(id)
                 .orElseThrow(() -> new EntityNotFoundException("Tópico não encontrado!"));
     }
 
     @Transactional
     public void deletar(Long id) {
-        var topico = repository.findById(id)
+        var topico = topicoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Tópico não encontrado!"));
 
         topico.excluir();
