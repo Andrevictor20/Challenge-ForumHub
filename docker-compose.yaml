@@ -3,26 +3,52 @@ version: '3.8'
 services:
   postgres:
     image: postgres:15
-    container_name: postgresqlforumhub
+    container_name: postgresql_forumhub
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: userapp
-      POSTGRES_PASSWORD: userapp123
-      POSTGRES_DB: userdb
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5435:5432"
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: forumhub_app
+    restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      API_SECURITY_TOKEN_SECRET: ${JWT_SECRET}
+    ports:
+      - "5040:5040"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - app-network
 
   pgadmin:
     image: dpage/pgadmin4
-    container_name: pgadminsqlforumhub
+    container_name: pgadmin_forumhub
+    restart: unless-stopped
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
     ports:
       - "8096:80"
+    depends_on:
+      - postgres
     networks:
       - app-network
 
