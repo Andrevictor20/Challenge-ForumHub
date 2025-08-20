@@ -1,10 +1,8 @@
 package com.br.alura.Challenge_ForumHub.infra.security;
 
-
 import com.br.alura.Challenge_ForumHub.repository.UsuarioRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,25 +21,24 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     @Autowired
     private UsuarioRepository repository;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var tokenJWT = recuperarToken(request);
-        if (tokenJWT !=null) {
+        if (tokenJWT != null) {
             var subject = tokenService.getSubject(tokenJWT);
             var usuario = repository.findByLogin(subject);
-            var authetication = new UsernamePasswordAuthenticationToken(usuario, null,usuario.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authetication);
-
+            var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
-        filterChain.doFilter(request,response);
-
+        filterChain.doFilter(request, response);
     }
 
     private String recuperarToken(HttpServletRequest request) {
         var authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader!=null){
-            return authorizationHeader.replace("Bearer", " ").trim();
+        if (authorizationHeader != null) {
+            return authorizationHeader.replace("Bearer ", "").trim();
         }
         return null;
     }
