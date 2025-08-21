@@ -39,6 +39,10 @@ public class UsuarioService {
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado."));
     }
 
+    public Usuario detalharPorLogin(String login) {
+        return repository.getReferenceByLogin(login);
+    }
+
     @Transactional
     public Usuario atualizar(Long id, DadosAtualizacaoUsuario dados) {
         var usuario = detalhar(id);

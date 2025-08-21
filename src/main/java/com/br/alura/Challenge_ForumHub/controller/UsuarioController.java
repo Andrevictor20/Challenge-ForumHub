@@ -11,6 +11,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.security.core.Authentication;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -38,6 +39,14 @@ public class UsuarioController {
         var usuario = service.detalhar(id);
         return ResponseEntity.ok(new DadosDetalhamentoUsuario(usuario));
     }
+
+    @GetMapping("/me")
+    public ResponseEntity detalharUsuarioLogado(Authentication authentication) {
+        var login = authentication.getName();
+        var usuario = service.detalharPorLogin(login);
+        return ResponseEntity.ok(new DadosDetalhamentoUsuario(usuario));
+    }
+
 
     @PutMapping("/{id}")
     @Transactional
