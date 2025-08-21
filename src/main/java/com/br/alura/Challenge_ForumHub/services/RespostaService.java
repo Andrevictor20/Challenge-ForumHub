@@ -36,6 +36,10 @@ public class RespostaService {
         return respostaRepository.findAllByTopicoIdAndAtivoTrue(idTopico, paginacao).map(DadosDetalhamentoResposta::new);
     }
 
+    public Resposta detalhar(Long id) {
+        return buscarRespostaPorId(id);
+    }
+
     @Transactional
     public Resposta atualizar(Long id, DadosAtualizacaoResposta dados, Usuario autor) {
         var resposta = buscarRespostaPorId(id);

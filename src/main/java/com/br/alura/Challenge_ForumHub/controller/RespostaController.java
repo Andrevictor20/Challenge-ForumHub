@@ -26,6 +26,12 @@ public class RespostaController {
         return ResponseEntity.created(uri).body(new DadosDetalhamentoResposta(resposta));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity detalhar(@PathVariable Long id) {
+        var resposta = service.detalhar(id);
+        return ResponseEntity.ok(new DadosDetalhamentoResposta(resposta));
+    }
+
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity atualizar(@PathVariable Long id, @RequestBody @Valid DadosAtualizacaoResposta dados, @AuthenticationPrincipal Usuario autor) {
