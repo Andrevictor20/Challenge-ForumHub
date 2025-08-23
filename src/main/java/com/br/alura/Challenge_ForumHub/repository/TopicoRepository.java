@@ -18,5 +18,5 @@ public interface TopicoRepository extends JpaRepository<Topico,Long> {
     Boolean existsByTituloAndMensagem(@NotBlank String titulo, @NotBlank String mensagem);
 
     Optional<Topico> findByIdAndEstadoDoTopicoTrue(Long id);
-    Page<Topico> findByCursoContainingIgnoreCaseAndAtivoTrue(String nomeCurso, Pageable paginacao);
+    Page<Topico> findByCursoContainingIgnoreCaseAndEstadoDoTopicoTrue(String nomeCurso, Pageable paginacao);
 }
