@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,8 +39,10 @@ public class TopicoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<DadosListagemTopico>> listar(@PageableDefault(size=10,sort={"id"}) Pageable paginacao){
-        var page = service.listar(paginacao);
+    public ResponseEntity<Page<DadosListagemTopico>> listar(
+            @PageableDefault(size = 10, sort = {"dataCriacao"}, direction = Sort.Direction.DESC) Pageable paginacao,
+            @RequestParam(name = "curso", required = false) String nomeCurso) {
+        var page = service.listar(paginacao, nomeCurso);
         return ResponseEntity.ok(page);
     }
 
