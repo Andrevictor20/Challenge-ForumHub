@@ -35,7 +35,7 @@ public class TopicoService {
 
     public Page<DadosListagemTopico> listar(Pageable paginacao, String nomeCurso) {
         if (nomeCurso != null && !nomeCurso.isEmpty()) {
-            return topicoRepository.findByCursoNomeContainingIgnoreCaseAndAtivoTrue(nomeCurso, paginacao).map(DadosListagemTopico::new);
+            return topicoRepository.findByCursoContainingIgnoreCaseAndAtivoTrue(nomeCurso, paginacao).map(DadosListagemTopico::new);
         }
         return topicoRepository.findAllByEstadoDoTopicoTrue(paginacao).map(DadosListagemTopico::new);
     }
