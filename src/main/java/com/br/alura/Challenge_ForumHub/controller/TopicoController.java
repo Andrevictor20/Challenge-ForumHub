@@ -41,8 +41,9 @@ public class TopicoController {
     @GetMapping
     public ResponseEntity<Page<DadosListagemTopico>> listar(
             @PageableDefault(size = 10, sort = {"dataDeCriacao"}, direction = Sort.Direction.DESC) Pageable paginacao,
-            @RequestParam(name = "curso", required = false) String nomeCurso) {
-        var page = service.listar(paginacao, nomeCurso);
+            @RequestParam(name = "q", required = false) String termoBusca,
+            @RequestParam(name = "autor", required = false) String nomeAutor) {
+        var page = service.listar(paginacao, termoBusca, nomeAutor);
         return ResponseEntity.ok(page);
     }
 

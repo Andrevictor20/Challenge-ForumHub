@@ -33,9 +33,12 @@ public class TopicoService {
         return topico;
     }
 
-    public Page<DadosListagemTopico> listar(Pageable paginacao, String nomeCurso) {
-        if (nomeCurso != null && !nomeCurso.isEmpty()) {
-            return topicoRepository.findByCursoContainingIgnoreCaseAndEstadoDoTopicoTrue(nomeCurso, paginacao).map(DadosListagemTopico::new);
+    public Page<DadosListagemTopico> listar(Pageable paginacao, String termoBusca, String nomeAutor) {
+        if (nomeAutor != null && !nomeAutor.trim().isEmpty()) {
+            return topicoRepository. findByAutorNomeIgnoreCaseAndEstadoDoTopicoTrue(nomeAutor, paginacao).map(DadosListagemTopico::new);
+        }
+        if (termoBusca != null && !termoBusca.trim().isEmpty()) {
+            return topicoRepository.findByTituloOrCursoContainingIgnoreCase(termoBusca, paginacao).map(DadosListagemTopico::new);
         }
         return topicoRepository.findAllByEstadoDoTopicoTrue(paginacao).map(DadosListagemTopico::new);
     }
