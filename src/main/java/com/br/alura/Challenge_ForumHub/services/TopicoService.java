@@ -69,7 +69,9 @@ public class TopicoService {
     @Transactional
     @CacheEvict(value = {"topicos", "topicos-lista"}, allEntries = true)
     public Topico atualizar(Long id, DadosAtualizacaoTopico dados) {
-        var topico = detalhar(id);
+        var topico = topicoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Tópico não encontrado para atualização!"));
+
         topico.atualizarInformacoes(dados);
         return topico;
     }
