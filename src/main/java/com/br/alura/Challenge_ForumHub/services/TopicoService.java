@@ -2,6 +2,7 @@ package com.br.alura.Challenge_ForumHub.services;
 
 import com.br.alura.Challenge_ForumHub.dto.DadosAtualizacaoTopico;
 import com.br.alura.Challenge_ForumHub.dto.DadosCadastroTopico;
+import com.br.alura.Challenge_ForumHub.dto.DadosDetalhamentoTopico;
 import com.br.alura.Challenge_ForumHub.dto.DadosListagemTopico;
 import com.br.alura.Challenge_ForumHub.infra.exception.ValidacaoException;
 import com.br.alura.Challenge_ForumHub.model.Topico;
@@ -49,9 +50,11 @@ public class TopicoService {
     }
 
     @Cacheable(value = "topicos", key = "#id")
-    public Topico detalhar(Long id) {
-        return topicoRepository.findByIdAndEstadoDoTopicoTrue(id)
+    @Transactional(readOnly = true)
+    public DadosDetalhamentoTopico detalhar(Long id) {
+        var topico = topicoRepository.findByIdAndEstadoDoTopicoTrue(id)
                 .orElseThrow(() -> new EntityNotFoundException("Tópico não encontrado!"));
+        return new DadosDetalhamentoTopico(topico);
     }
 
     @Transactional

@@ -48,9 +48,9 @@ public class TopicoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity detalhar(@PathVariable Long id){
-        var topico = service.detalhar(id);
-        return ResponseEntity.ok(new DadosDetalhamentoTopico(topico));
+    public ResponseEntity<DadosDetalhamentoTopico> detalhar(@PathVariable Long id) {
+        var topicoDTO = service.detalhar(id); // Agora já recebe o DTO
+        return ResponseEntity.ok(topicoDTO);
     }
 
     @DeleteMapping("/{id}")

@@ -21,11 +21,12 @@ public interface TopicoRepository extends JpaRepository<Topico,Long> {
     Optional<Topico> findByIdAndEstadoDoTopicoTrue(Long id);
 
     @Query("""
-            SELECT t FROM Topico t WHERE t.estadoDoTopico = true AND
+            SELECT t FROM Topico t JOIN FETCH t.autor WHERE t.estadoDoTopico = true AND
             (LOWER(t.titulo) LIKE LOWER(CONCAT('%', :termo, '%'))
             OR LOWER(t.curso) LIKE LOWER(CONCAT('%', :termo, '%')))
             """)
     Page<Topico> findByTituloOrCursoContainingIgnoreCase(@Param("termo") String termo, Pageable paginacao);
 
+    @Query("SELECT t FROM Topico t JOIN FETCH t.autor WHERE lower(t.autor.nome) LIKE lower(concat('%', :nomeAutor, '%')) AND t.estadoDoTopico = true")
     Page<Topico> findByAutorNomeIgnoreCaseAndEstadoDoTopicoTrue(String nomeAutor, Pageable paginacao);
 }
