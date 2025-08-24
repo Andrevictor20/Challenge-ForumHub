@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Table(name = "respostas")
 @Entity(name = "Resposta")
+@Cacheable
 @Getter
 @NoArgsConstructor // O construtor padrão ainda é necessário para o JPA
 @AllArgsConstructor
