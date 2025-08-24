@@ -7,10 +7,17 @@ public record DadosListagemTopico(
         String titulo,
         String mensagem,
         String nomeAutor,
+        Boolean autorAtivo,
         String curso
 ) {
     public DadosListagemTopico(Topico topico){
-        this(topico.getId(), topico.getTitulo(),topico.getMensagem(),topico.getAutor().getNome(),topico.getCurso());
+        this(topico.getId(),
+                topico.getTitulo(),
+                topico.getMensagem(),
+                topico.getAutor().getNome(),
+                topico.getAutor().getAtivo(),
+                topico.getCurso()
+                );
     }
 }
 
