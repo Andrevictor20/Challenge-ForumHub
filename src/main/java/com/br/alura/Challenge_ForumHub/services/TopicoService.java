@@ -10,6 +10,8 @@ import com.br.alura.Challenge_ForumHub.repository.TopicoRepository;
 import com.br.alura.Challenge_ForumHub.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ public class TopicoService {
     private final UsuarioRepository usuarioRepository;
 
     @Transactional
+    @CacheEvict(value = {"topicos", "topicos-lista"}, allEntries = true)
     public Topico cadastrar(DadosCadastroTopico dados, Usuario autor) {
         if (topicoRepository.existsByTituloAndMensagem(dados.titulo(), dados.mensagem())) {
             throw new ValidacaoException("Já existe um tópico com mesmo título e mensagem!");
@@ -33,6 +36,8 @@ public class TopicoService {
         return topico;
     }
 
+    @Cacheable(value = "topicos-lista",
+            key = "#paginacao.pageNumber + '-' + #paginacao.pageSize + '-' + (#termoBusca != null ? #termoBusca : 'null') + '-' + (#nomeAutor != null ? #nomeAutor : 'null')")
     public Page<DadosListagemTopico> listar(Pageable paginacao, String termoBusca, String nomeAutor) {
         if (nomeAutor != null && !nomeAutor.trim().isEmpty()) {
             return topicoRepository. findByAutorNomeIgnoreCaseAndEstadoDoTopicoTrue(nomeAutor, paginacao).map(DadosListagemTopico::new);
@@ -43,12 +48,14 @@ public class TopicoService {
         return topicoRepository.findAllByEstadoDoTopicoTrue(paginacao).map(DadosListagemTopico::new);
     }
 
+    @Cacheable(value = "topicos", key = "#id")
     public Topico detalhar(Long id) {
         return topicoRepository.findByIdAndEstadoDoTopicoTrue(id)
                 .orElseThrow(() -> new EntityNotFoundException("Tópico não encontrado!"));
     }
 
     @Transactional
+    @CacheEvict(value = {"topicos", "topicos-lista"}, allEntries = true)
     public void deletar(Long id) {
         var topico = topicoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Tópico não encontrado!"));
@@ -57,6 +64,7 @@ public class TopicoService {
     }
 
     @Transactional
+    @CacheEvict(value = {"topicos", "topicos-lista"}, allEntries = true)
     public Topico atualizar(Long id, DadosAtualizacaoTopico dados) {
         var topico = detalhar(id);
         topico.atualizarInformacoes(dados);

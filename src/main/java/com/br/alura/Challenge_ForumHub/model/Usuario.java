@@ -14,7 +14,6 @@ import java.util.List;
 
 @Table(name = "usuarios")
 @Entity(name = "Usuario")
-@Cacheable
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor

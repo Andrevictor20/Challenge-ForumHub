@@ -8,6 +8,8 @@ import com.br.alura.Challenge_ForumHub.repository.RespostaRepository;
 import com.br.alura.Challenge_ForumHub.repository.TopicoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ public class RespostaService {
     private final RespostaRepository respostaRepository;
 
     @Transactional
+    @CacheEvict(value = {"respostas", "respostas-por-topico"}, allEntries = true)
     public Resposta criar(DadosCadastroResposta dados, Usuario autor) {
         var topico = topicoRepository.findById(dados.topicoId())
                 .orElseThrow(() -> new ValidacaoException("Tópico não encontrado!"));
@@ -29,6 +32,7 @@ public class RespostaService {
         return resposta;
     }
 
+    @Cacheable(value = "respostas-por-topico", key = "#idTopico + '-' + #paginacao.pageNumber + '-' + #paginacao.pageSize")
     public Page<DadosDetalhamentoResposta> listarPorTopico(Long idTopico, Pageable paginacao) {
         if (!topicoRepository.existsById(idTopico)) {
             throw new EntityNotFoundException("Tópico não encontrado!");
@@ -36,11 +40,13 @@ public class RespostaService {
         return respostaRepository.findAllByTopicoIdAndAtivoTrue(idTopico, paginacao).map(DadosDetalhamentoResposta::new);
     }
 
+    @Cacheable(value = "respostas", key = "#id")
     public Resposta detalhar(Long id) {
         return buscarRespostaPorId(id);
     }
 
     @Transactional
+    @CacheEvict(value = {"respostas", "respostas-por-topico"}, allEntries = true)
     public Resposta atualizar(Long id, DadosAtualizacaoResposta dados, Usuario autor) {
         var resposta = buscarRespostaPorId(id);
         validarAutor(resposta, autor);
@@ -49,6 +55,7 @@ public class RespostaService {
     }
 
     @Transactional
+    @CacheEvict(value = {"respostas", "respostas-por-topico"}, allEntries = true)
     public void deletar(Long id, Usuario autor) {
         var resposta = buscarRespostaPorId(id);
         validarAutor(resposta, autor);
@@ -56,6 +63,7 @@ public class RespostaService {
     }
 
     @Transactional
+    @CacheEvict(value = {"respostas", "respostas-por-topico", "topicos"}, allEntries = true)
     public void marcarComoSolucao(Long id, Usuario autorDoTopico) {
         var resposta = buscarRespostaPorId(id);
         var topico = resposta.getTopico();
