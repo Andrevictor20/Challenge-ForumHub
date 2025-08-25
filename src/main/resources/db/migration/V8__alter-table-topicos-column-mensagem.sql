@@ -1,0 +1,1 @@
+ALTER TABLE topicos ALTER COLUMN mensagem TYPE TEXT;
