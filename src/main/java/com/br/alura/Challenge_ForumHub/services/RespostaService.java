@@ -76,7 +76,7 @@ public class RespostaService {
     }
 
     private Resposta buscarRespostaPorId(Long id) {
-        return respostaRepository.findById(id)
+        return respostaRepository.findByIdWithAutor(id)
                 .filter(Resposta::getAtivo)
                 .orElseThrow(() -> new EntityNotFoundException("Resposta não encontrada!"));
     }
