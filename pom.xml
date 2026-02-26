@@ -91,11 +91,11 @@
             <artifactId>java-jwt</artifactId>
             <version>4.5.0</version>
         </dependency>
-        <dependency>
-            <groupId>io.github.cdimascio</groupId>
-            <artifactId>java-dotenv</artifactId>
-            <version>5.2.2</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>io.github.cdimascio</groupId>-->
+<!--            <artifactId>java-dotenv</artifactId>-->
+<!--            <version>5.2.2</version>-->
+<!--        </dependency>-->
         <!-- https://mvnrepository.com/artifact/javax.cache/cache-api -->
         <dependency>
             <groupId>javax.cache</groupId>
