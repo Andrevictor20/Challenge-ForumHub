@@ -13,11 +13,11 @@ import java.util.TimeZone;
 public class ChallengeForumHubApplication {
 
 	public static void main(String[] args) {
-//        Dotenv dotenv = Dotenv.load();
+//       Dotenv dotenv = Dotenv.load();
 //        dotenv.entries().forEach(entry ->
-//                System.setProperty(entry.getKey(), entry.getValue())
-//        );
-
+//               System.setProperty(entry.getKey(), entry.getValue())
+//       );
+//
         SpringApplication.run(ChallengeForumHubApplication.class, args);
 	}
     @PostConstruct
